@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - BookMarket</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .payment-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+        .payment-card {
+            background: var(--bg-color);
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-lg);
+            padding: 2rem;
+        }
+        .book-summary {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .book-summary h3 {
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .summary-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+        }
+        .payment-form {
+            margin-top: 2rem;
+        }
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .payment-method {
+            border: 2px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .payment-method:hover {
+            border-color: var(--primary-color);
+        }
+        .payment-method.selected {
+            border-color: var(--primary-color);
+            background: var(--bg-light);
+        }
+        .payment-method input {
+            margin-right: 0.5rem;
+        }
+        .success-message {
+            text-align: center;
+            padding: 2rem;
+        }
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1>📚 BookMarket</h1>
+            </div>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/books" class="nav-link">Browse Books</a>
+                <a href="/profile" class="nav-link" id="profileLink" style="display: none;">Profile</a>
+                <button class="btn-logout" id="logoutBtn" style="display: none;">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="payment-container">
+            <div class="payment-card" id="paymentForm">
+                <h1>Complete Your Purchase</h1>
+                
+                <div class="book-summary" id="bookSummary">
+                    <h3>Order Summary</h3>
+                    <div class="summary-row">
+                        <span>Book:</span>
+                        <span id="bookTitle">Loading...</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Author:</span>
+                        <span id="bookAuthor">Loading...</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Price:</span>
+                        <span id="bookPrice">Loading...</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Total Amount:</span>
+                        <span id="totalAmount">Loading...</span>
+                    </div>
+                </div>
+
+                <div class="payment-form">
+                    <h3>Select Payment Method</h3>
+                    <div class="payment-methods">
+                        <label class="payment-method" for="card">
+                            <input type="radio" name="paymentMethod" id="card" value="card" checked>
+                            💳 Credit/Debit Card
+                        </label>
+                        <label class="payment-method" for="upi">
+                            <input type="radio" name="paymentMethod" id="upi" value="upi">
+                            📱 UPI
+                        </label>
+                        <label class="payment-method" for="netbanking">
+                            <input type="radio" name="paymentMethod" id="netbanking" value="netbanking">
+                            🏦 Net Banking
+                        </label>
+                    </div>
+
+                    <div id="cardDetails" class="payment-details">
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number</label>
+                            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expiryDate">Expiry Date</label>
+                                <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" placeholder="123" maxlength="3">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cardName">Cardholder Name</label>
+                            <input type="text" id="cardName" placeholder="John Doe">
+                        </div>
+                    </div>
+
+                    <div id="upiDetails" class="payment-details" style="display: none;">
+                        <div class="form-group">
+                            <label for="upiId">UPI ID</label>
+                            <input type="text" id="upiId" placeholder="yourname@paytm">
+                        </div>
+                    </div>
+
+                    <div id="netbankingDetails" class="payment-details" style="display: none;">
+                        <div class="form-group">
+                            <label for="bankName">Select Bank</label>
+                            <select id="bankName">
+                                <option value="">Choose a bank</option>
+                                <option value="sbi">State Bank of India</option>
+                                <option value="hdfc">HDFC Bank</option>
+                                <option value="icici">ICICI Bank</option>
+                                <option value="axis">Axis Bank</option>
+                                <option value="pnb">Punjab National Bank</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-block" id="payButton" onclick="processPayment()">
+                        Pay Now
+                    </button>
+                </div>
+            </div>
+
+            <div class="payment-card" id="successMessage" style="display: none;">
+                <div class="success-message">
+                    <div class="success-icon">✅</div>
+                    <h2>Payment Successful!</h2>
+                    <p>Thank you for your purchase. Your order has been confirmed.</p>
+                    <p><strong>Order ID:</strong> <span id="orderId"></span></p>
+                    <div style="margin-top: 2rem;">
+                        <a href="/books" class="btn btn-primary">Continue Shopping</a>
+                        <a href="/profile" class="btn btn-secondary" style="margin-left: 1rem;">View Orders</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/static/js/app.js"></script>
+    <script>
+        checkAuthStatus();
+
+        // Get book details from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookId = urlParams.get('bookId');
+
+        // Load book details
+        async function loadBookDetails() {
+            if (!bookId) {
+                window.location.href = '/books';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/books/${bookId}`);
+                if (response.ok) {
+                    const book = await response.json();
+                    
+                    // Check if book is sold
+                    if (book.is_sold) {
+                        alert('This book has already been sold.');
+                        window.location.href = '/books';
+                        return;
+                    }
+                    
+                    document.getElementById('bookTitle').textContent = book.title;
+                    document.getElementById('bookAuthor').textContent = book.author;
+                    document.getElementById('bookPrice').textContent = `₹${book.price.toFixed(2)}`;
+                    document.getElementById('totalAmount').textContent = `₹${book.price.toFixed(2)}`;
+                } else {
+                    alert('Book not found');
+                    window.location.href = '/books';
+                }
+            } catch (error) {
+                console.error('Error loading book:', error);
+                alert('Error loading book details');
+                window.location.href = '/books';
+            }
+        }
+
+        // Handle payment method selection
+        document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('cardDetails').style.display = 
+                    this.value === 'card' ? 'block' : 'none';
+                document.getElementById('upiDetails').style.display = 
+                    this.value === 'upi' ? 'block' : 'none';
+                document.getElementById('netbankingDetails').style.display = 
+                    this.value === 'netbanking' ? 'block' : 'none';
+            });
+        });
+
+        // Format card number input
+        document.getElementById('cardNumber')?.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s/g, '');
+            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+            e.target.value = formattedValue;
+        });
+
+        // Format expiry date input
+        document.getElementById('expiryDate')?.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value;
+        });
+
+        // Process payment
+        function processPayment() {
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            let isValid = true;
+
+            if (paymentMethod === 'card') {
+                const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+                const expiryDate = document.getElementById('expiryDate').value;
+                const cvv = document.getElementById('cvv').value;
+                const cardName = document.getElementById('cardName').value;
+
+                if (!cardNumber || cardNumber.length < 16) {
+                    alert('Please enter a valid card number');
+                    isValid = false;
+                } else if (!expiryDate || expiryDate.length < 5) {
+                    alert('Please enter a valid expiry date');
+                    isValid = false;
+                } else if (!cvv || cvv.length < 3) {
+                    alert('Please enter a valid CVV');
+                    isValid = false;
+                } else if (!cardName) {
+                    alert('Please enter cardholder name');
+                    isValid = false;
+                }
+            } else if (paymentMethod === 'upi') {
+                const upiId = document.getElementById('upiId').value;
+                if (!upiId || !upiId.includes('@')) {
+                    alert('Please enter a valid UPI ID');
+                    isValid = false;
+                }
+            } else if (paymentMethod === 'netbanking') {
+                const bankName = document.getElementById('bankName').value;
+                if (!bankName) {
+                    alert('Please select a bank');
+                    isValid = false;
+                }
+            }
+
+            if (isValid) {
+                // Simulate payment processing
+                document.getElementById('payButton').disabled = true;
+                document.getElementById('payButton').textContent = 'Processing...';
+
+                setTimeout(() => {
+                    // Generate random order ID
+                    const orderId = 'ORD' + Date.now();
+                    document.getElementById('orderId').textContent = orderId;
+                    
+                    // Show success message
+                    document.getElementById('paymentForm').style.display = 'none';
+                    document.getElementById('successMessage').style.display = 'block';
+
+                    // Mark book as sold (if user is authenticated)
+                    const token = localStorage.getItem('token');
+                    if (token && bookId) {
+                        fetch(`/api/books/${bookId}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({ is_sold: true })
+                        }).catch(err => console.error('Error updating book status:', err));
+                    }
+                }, 2000);
+            }
+        }
+
+        // Load book details on page load
+        loadBookDetails();
+    </script>
+</body>
+</html>

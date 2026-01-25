@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookMarket - Buy & Sell Second Hand Books</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1>📚 BookMarket</h1>
+            </div>
+            <div class="nav-links">
+                <a href="/" class="nav-link active">Home</a>
+                <a href="/books" class="nav-link">Browse Books</a>
+                <a href="/login" class="nav-link" id="loginLink">Login</a>
+                <a href="/profile" class="nav-link" id="profileLink" style="display: none;">Profile</a>
+                <button class="btn-logout" id="logoutBtn" style="display: none;">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Buy & Sell Second Hand Books</h1>
+                <p class="hero-subtitle">Find great deals on pre-loved books or sell your own at discounted prices</p>
+                <div class="hero-buttons">
+                    <a href="/books" class="btn btn-primary">Browse Books</a>
+                    <a href="/login" class="btn btn-secondary">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section class="features-section">
+        <div class="container">
+            <h2 class="section-title">Why Choose BookMarket?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Discounted Prices</h3>
+                    <p>Save money by buying second-hand books at great prices</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📖</div>
+                    <h3>Wide Selection</h3>
+                    <p>Browse through hundreds of books from various categories</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Easy Selling</h3>
+                    <p>List your books quickly and manage your inventory easily</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="/static/js/app.js"></script>
+    <script>
+        checkAuthStatus();
+    </script>
+</body>
+</html>
