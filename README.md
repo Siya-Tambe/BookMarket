@@ -5,7 +5,7 @@ A full-stack web application for buying and selling second-hand books at discoun
 ## Live Demo
 
 - **Deployed URL** (Render):  
-  `https://bookmarket-mayurroro.onrender.com/`
+  https://bookmarket-mayurroro.onrender.com/
 
 All backend APIs and frontend pages (home, login, browse books, profile, payment) are served from this URL.
 
