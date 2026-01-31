@@ -39,7 +39,10 @@ if os.path.exists("static"):
 @app.get("/api/health")
 def health_check():
     """Diagnostic endpoint to check DB connection status."""
-    return get_db_info()
+    return {
+        "db_info": get_db_info(),
+        "env_keys": list(os.environ.keys())
+    }
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root():
