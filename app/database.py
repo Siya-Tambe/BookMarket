@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool, QueuePool
 from app.config import DATABASE_URL, ENVIRONMENT
+from urllib.parse import urlparse, urlunparse
 
 # Determine if using PostgreSQL (Supabase) or SQLite
 is_postgresql = "postgresql" in DATABASE_URL or "postgres" in DATABASE_URL
@@ -43,6 +44,32 @@ def get_db():
 
 def init_db():
     """
-    Initialize database tables
+    Initialize database tables. If connection fails, log a warning but don't crash the app.
     """
-    Base.metadata.create_all(bind=engine)
+    try:
+        Base.metadata.create_all(bind=engine)
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.warning(f"Database initialization skipped (connection failed): {e}")
+
+
+def _mask_db_url(url: str) -> str:
+    try:
+        p = urlparse(url)
+        if p.username:
+            netloc = f"{p.username}:*****@{p.hostname}"
+            if p.port:
+                netloc += f":{p.port}"
+            return urlunparse((p.scheme, netloc, p.path, p.params, p.query, p.fragment))
+    except Exception:
+        pass
+    return url
+
+
+def get_db_info() -> dict:
+    """Return a small dict with DB type and masked URL for diagnostics."""
+    return {
+        "is_postgresql": is_postgresql,
+        "database_url_masked": _mask_db_url(DATABASE_URL),
+    }

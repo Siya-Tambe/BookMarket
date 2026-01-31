@@ -8,10 +8,18 @@ from typing import List
 import os
 
 from app import models, schemas, auth
-from app.database import engine, get_db, init_db
+from app.database import engine, get_db, init_db, get_db_info
+import logging
 
 # Create database tables
 init_db()
+
+# Log database diagnostics (masked URL) so hosted logs show which DB is used
+db_info = get_db_info()
+masked = db_info.get("database_url_masked")
+db_type = "PostgreSQL (Supabase)" if db_info.get("is_postgresql") else "SQLite (local)"
+logging.basicConfig(level=logging.INFO)
+logging.getLogger("uvicorn.error").info(f"Using database: {db_type}; URL: {masked}")
 
 app = FastAPI(title="BookMarket API")
 
