@@ -40,8 +40,8 @@ if os.path.exists("static"):
 def health_check():
     """Diagnostic endpoint to check DB connection status."""
     return {
-        "db_info": get_db_info(),
-        "env_keys": list(os.environ.keys())
+        "status": "healthy",
+        "database": get_db_info()
     }
 
 @app.get("/", response_class=HTMLResponse)
