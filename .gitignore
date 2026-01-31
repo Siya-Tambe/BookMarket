@@ -32,6 +32,9 @@ Thumbs.db
 .env
 .env.local
 
-#Demonstration Video
-DemonstrationVideo/
-.mp4
+# Media
+Demonstration_Video/
+*.mp4
+
+# Scripts (local usage)
+scripts/
