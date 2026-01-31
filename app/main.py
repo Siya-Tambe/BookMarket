@@ -36,6 +36,11 @@ app.add_middleware(
 if os.path.exists("static"):
     app.mount("/static", StaticFiles(directory="static"), name="static")
 
+@app.get("/api/health")
+def health_check():
+    """Diagnostic endpoint to check DB connection status."""
+    return get_db_info()
+
 @app.get("/", response_class=HTMLResponse)
 async def read_root():
     return FileResponse("templates/index.html")
