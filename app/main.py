@@ -8,10 +8,10 @@ from typing import List
 import os
 
 from app import models, schemas, auth
-from app.database import engine, get_db
+from app.database import engine, get_db, init_db
 
 # Create database tables
-models.Base.metadata.create_all(bind=engine)
+init_db()
 
 app = FastAPI(title="BookMarket API")
 

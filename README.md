@@ -27,7 +27,7 @@ All backend APIs and frontend pages (home, login, browse books, profile, payment
 ## Tech Stack
 
 - **Backend**: Python with FastAPI
-- **Database**: SQLite (SQL database)
+- **Database**: PostgreSQL (via Supabase) - SQLite for local development
 - **Authentication**: JWT tokens (`python-jose`)
 - **ORM**: SQLAlchemy
 - **Frontend**: HTML, CSS, JavaScript (served via FastAPI templates)
@@ -83,6 +83,43 @@ http://localhost:8000
 
 The application will automatically create the SQLite database (`bookmarket.db`) on first run.
 
+## Supabase Integration (for Production/Hosting)
+
+**Important**: SQLite data is lost when the server restarts on hosting platforms. To persist data in production:
+
+### Quick Setup for Render Deployment
+
+1. **Create a free Supabase account** at https://supabase.com
+2. **Create a new Supabase project** and get your PostgreSQL connection string
+3. **In your Render dashboard**, add environment variables:
+   - `DATABASE_URL`: Your Supabase PostgreSQL connection string
+   - `SECRET_KEY`: A strong random secret key
+
+4. **Deploy** - the app will automatically create tables in Supabase
+
+### Local Testing with Supabase
+
+1. **Create `.env` file** in project root (copy from `.env.example`):
+   ```
+   DATABASE_URL=postgresql://postgres:password@host.supabase.co:5432/postgres
+   SECRET_KEY=your-secret-key
+   ```
+
+2. **Run the app** - it will use Supabase:
+   ```bash
+   python run.py
+   ```
+
+📖 **[Full Supabase Integration Guide](SUPABASE_SETUP.md)** - Step-by-step instructions for setup
+
+### Why Supabase for Production?
+
+- ✅ Data persists across server restarts and deployments
+- ✅ Scalable PostgreSQL database
+- ✅ Free tier suitable for small projects
+- ✅ Automatic backups
+- ✅ Easy to setup and manage
+
 ## Project Structure
 
 ```text
@@ -93,10 +130,11 @@ BookMarket/
 │   ├── __init__.py
 │   ├── app.py           # ASGI entrypoint (from .main import app)
 │   ├── main.py          # FastAPI application, routes & HTML pages
-│   ├── database.py      # Database configuration (SQLite + SQLAlchemy)
+│   ├── database.py      # Database configuration (PostgreSQL/SQLite)
 │   ├── models.py        # SQLAlchemy models (User, Book)
 │   ├── schemas.py       # Pydantic schemas (request/response models)
-│   └── auth.py          # Authentication utilities (JWT + bcrypt)
+│   ├── auth.py          # Authentication utilities (JWT + bcrypt)
+│   └── config.py        # Configuration and environment variables
 ├── templates/
 │   ├── index.html       # Home page
 │   ├── login.html       # Login/Register page
@@ -174,10 +212,12 @@ BookMarket/
 
 ## Security Notes
 
-- Change the `SECRET_KEY` in `app/auth.py` for production use.
-- Consider using environment variables (e.g. `.env`) for sensitive configuration (secrets, DB URLs, etc.).
-- For production, prefer a more robust database (e.g. PostgreSQL) instead of SQLite.
-- Implement stricter CORS policies for production instead of `allow_origins=["*"]`.
+- **Change the `SECRET_KEY`** in `app/config.py` or use environment variables for production
+- **Use environment variables** for sensitive configuration (`.env` file, never committed to git)
+- **For production**: Use PostgreSQL (Supabase) instead of SQLite
+- **Implement stricter CORS policies** for production instead of `allow_origins=["*"]`
+- **Use `.env.example`** as a template - copy to `.env` and fill in actual values
+- **Keep `.env` file in `.gitignore`** - never commit credentials
 
 ## License
 
