@@ -106,12 +106,6 @@ BookMarket/
 ├── run.py                       # Helper script to run uvicorn with reload
 ├── render.yaml                  # Render deployment configuration
 │
-├── SUPABASE_SETUP.md            # Supabase integration guide
-├── RENDER_DEPLOYMENT.md         # Render deployment instructions
-├── INTEGRATION_SUMMARY.md       # Technical overview of Supabase integration
-├── INTEGRATION_CHECKLIST.md     # Step-by-step verification checklist
-├── QUICK_START.md               # Quick reference guide
-├── START_HERE.md                # Entry point for reading guides
 └── README.md                    # This file
 ```
 
