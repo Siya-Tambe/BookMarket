@@ -90,10 +90,15 @@ async function loadBooks() {
 
     try {
         const response = await fetch('/api/books');
+        
+        // Add a small artificial delay so the skeleton is actually visible
+        await new Promise(resolve => setTimeout(resolve, 800));
+
         if (response.ok) {
             const books = await response.json();
             
             container.innerHTML = '';
+            container.style.opacity = '0'; // Start invisible for fade-in
 
             if (books.length === 0) {
                 if (noBooksMsg) noBooksMsg.style.display = 'block';
@@ -102,6 +107,12 @@ async function loadBooks() {
                     container.appendChild(createBookCard(book));
                 });
             }
+            
+            // Trigger fade-in
+            requestAnimationFrame(() => {
+                container.style.transition = 'opacity 0.5s ease';
+                container.style.opacity = '1';
+            });
         } else {
             container.innerHTML = '<p class="error-message">Failed to load books</p>';
         }
