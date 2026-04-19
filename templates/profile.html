@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile - BookMarket</title>
+    <link rel="icon" type="image/png" href="/static/img/favicon.png">
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/skeletons.css">
     <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');</script>
 </head>
+
 <body>
     <nav class="navbar">
         <div class="container">
@@ -32,7 +35,8 @@
                 <div class="user-details">
                     <h2 id="userName">Loading...</h2>
                     <p id="userEmail">Loading...</p>
-                    <button class="btn btn-secondary btn-small" style="margin-top: 1rem;" onclick="logout()">Logout</button>
+                    <button class="btn btn-secondary btn-small" style="margin-top: 1rem;"
+                        onclick="logout()">Logout</button>
                 </div>
             </div>
         </div>
@@ -135,11 +139,11 @@
         function createBookCard(book, isOwner = false) {
             const card = document.createElement('div');
             card.className = `book-card ${book.is_sold ? 'sold' : ''}`;
-            
+
             const soldBadge = book.is_sold ? '<span class="sold-badge">SOLD</span>' : '';
-            const discountBadge = book.original_price && book.original_price > book.price ? 
-                `<span class="discount-badge">${Math.round((1 - book.price/book.original_price) * 100)}% OFF</span>` : '';
-            
+            const discountBadge = book.original_price && book.original_price > book.price ?
+                `<span class="discount-badge">${Math.round((1 - book.price / book.original_price) * 100)}% OFF</span>` : '';
+
             card.innerHTML = `
                 ${soldBadge}
                 ${discountBadge}
@@ -192,7 +196,7 @@
 
         async function deleteBook(bookId) {
             if (!confirm('Are you sure you want to delete this book?')) return;
-            
+
             const token = localStorage.getItem('token');
             try {
                 const response = await fetch(`/api/books/${bookId}`, {
@@ -214,4 +218,5 @@
         window.deleteBook = deleteBook;
     </script>
 </body>
+
 </html>
