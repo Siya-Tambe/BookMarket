@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile - BookMarket</title>
+    <link rel="icon" type="image/png" href="/static/img/favicon.png">
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/skeletons.css">
+    <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');</script>
 </head>
+
 <body>
     <nav class="navbar">
         <div class="container">
@@ -17,6 +22,7 @@
                 <a href="/books" class="nav-link">Browse Books</a>
                 <a href="/profile" class="nav-link active">Profile</a>
                 <button class="btn-logout" id="logoutBtn">Logout</button>
+                <button id="themeToggleBtn" class="theme-toggle-btn">🌓</button>
             </div>
         </div>
     </nav>
@@ -29,6 +35,8 @@
                 <div class="user-details">
                     <h2 id="userName">Loading...</h2>
                     <p id="userEmail">Loading...</p>
+                    <button class="btn btn-secondary btn-small" style="margin-top: 1rem;"
+                        onclick="logout()">Logout</button>
                 </div>
             </div>
         </div>
@@ -43,7 +51,6 @@
             <!-- User's books will be loaded here -->
         </div>
 
-        <div id="loadingMessage" class="loading-message">Loading your books...</div>
         <div id="noBooksMessage" class="no-books-message" style="display: none;">
             <p>You haven't listed any books yet. <a href="/books">List your first book!</a></p>
         </div>
@@ -89,11 +96,11 @@
         async function loadMyBooks() {
             const token = localStorage.getItem('token');
             const container = document.getElementById('myBooksContainer');
-            const loadingMsg = document.getElementById('loadingMessage');
             const noBooksMsg = document.getElementById('noBooksMessage');
 
-            loadingMsg.style.display = 'block';
-            container.innerHTML = '';
+            // Inject 4 Skeletons instantly
+            container.innerHTML = getSkeletonCardsHTML(4);
+            noBooksMsg.style.display = 'none';
 
             try {
                 const response = await fetch('/api/users/me/books', {
@@ -110,7 +117,8 @@
                         filteredBooks = books.filter(b => b.is_sold);
                     }
 
-                    loadingMsg.style.display = 'none';
+                    // Clear skeletons
+                    container.innerHTML = '';
 
                     if (filteredBooks.length === 0) {
                         noBooksMsg.style.display = 'block';
@@ -121,11 +129,9 @@
                         });
                     }
                 } else {
-                    loadingMsg.style.display = 'none';
                     container.innerHTML = '<p class="error-message">Failed to load books</p>';
                 }
             } catch (error) {
-                loadingMsg.style.display = 'none';
                 container.innerHTML = '<p class="error-message">An error occurred</p>';
             }
         }
@@ -133,11 +139,11 @@
         function createBookCard(book, isOwner = false) {
             const card = document.createElement('div');
             card.className = `book-card ${book.is_sold ? 'sold' : ''}`;
-            
+
             const soldBadge = book.is_sold ? '<span class="sold-badge">SOLD</span>' : '';
-            const discountBadge = book.original_price && book.original_price > book.price ? 
-                `<span class="discount-badge">${Math.round((1 - book.price/book.original_price) * 100)}% OFF</span>` : '';
-            
+            const discountBadge = book.original_price && book.original_price > book.price ?
+                `<span class="discount-badge">${Math.round((1 - book.price / book.original_price) * 100)}% OFF</span>` : '';
+
             card.innerHTML = `
                 ${soldBadge}
                 ${discountBadge}
@@ -190,7 +196,7 @@
 
         async function deleteBook(bookId) {
             if (!confirm('Are you sure you want to delete this book?')) return;
-            
+
             const token = localStorage.getItem('token');
             try {
                 const response = await fetch(`/api/books/${bookId}`, {
@@ -212,4 +218,5 @@
         window.deleteBook = deleteBook;
     </script>
 </body>
+
 </html>

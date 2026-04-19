@@ -1,0 +1,66 @@
+/* Skeleton Loaders Framework */
+
+@keyframes skeleton-pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.skeleton {
+    animation: skeleton-pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    background-color: #e2e8f0;
+}
+
+.skeleton-card {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    pointer-events: none; /* prevent ghost interactions */
+}
+
+.skeleton-img {
+    width: 100%;
+    height: 320px;
+    border-radius: 1rem 1rem 0 0;
+}
+
+.skeleton-info {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.skeleton-title {
+    width: 80%;
+    height: 1.5rem;
+    border-radius: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.skeleton-author {
+    width: 50%;
+    height: 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.skeleton-text {
+    width: 40%;
+    height: 0.875rem;
+    border-radius: 0.25rem;
+}
+
+.skeleton-price {
+    width: 30%;
+    height: 1.5rem;
+    border-radius: 0.25rem;
+    margin-top: 0.75rem;
+}
+
+.skeleton-btn {
+    width: 100%;
+    height: 48px;
+    border-radius: 0.75rem;
+    margin-top: 0.5rem;
+}
