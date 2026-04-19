@@ -76,6 +76,8 @@
             margin-bottom: 1rem;
         }
     </style>
+    <link rel="stylesheet" href="/static/css/skeletons.css">
+    <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');</script>
 </head>
 <body>
     <nav class="navbar">
@@ -88,6 +90,7 @@
                 <a href="/books" class="nav-link">Browse Books</a>
                 <a href="/profile" class="nav-link" id="profileLink" style="display: none;">Profile</a>
                 <button class="btn-logout" id="logoutBtn" style="display: none;">Logout</button>
+                <button id="themeToggleBtn" class="theme-toggle-btn">🌓</button>
             </div>
         </div>
     </nav>

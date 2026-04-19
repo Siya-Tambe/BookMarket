@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - BookMarket</title>
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/skeletons.css">
+    <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');</script>
 </head>
 <body>
     <nav class="navbar">
@@ -16,6 +18,7 @@
                 <a href="/" class="nav-link">Home</a>
                 <a href="/books" class="nav-link">Browse Books</a>
                 <a href="/login" class="nav-link active">Login</a>
+                <button id="themeToggleBtn" class="theme-toggle-btn">🌓</button>
             </div>
         </div>
     </nav>

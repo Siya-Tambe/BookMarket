@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, File, UploadFile, Form
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -128,6 +128,49 @@ def create_book(book: schemas.BookCreate, current_user: models.User = Depends(au
     db.commit()
     db.refresh(db_book)
     return db_book
+
+@app.post("/api/books/upload-image")
+async def upload_image(file: UploadFile = File(...), current_user: models.User = Depends(auth.get_current_user)):
+    """Upload an image to Supabase Storage or local disk and return its URL path."""
+    from app.supabase_client import supabase
+    from app.config import SUPABASE_BUCKET
+    import uuid
+    
+    # Generate unique filename
+    ext = os.path.splitext(file.filename)[1]
+    filename = f"{uuid.uuid4()}{ext}"
+    
+    # Try Supabase first
+    if supabase:
+        try:
+            content = await file.read()
+            # Upload to Supabase
+            supabase.storage.from_(SUPABASE_BUCKET).upload(
+                path=filename,
+                file=content,
+                file_options={"content-type": file.content_type}
+            )
+            # Get Public URL
+            public_url = supabase.storage.from_(SUPABASE_BUCKET).get_public_url(filename)
+            return {"image_url": public_url}
+        except Exception as e:
+            logging.getLogger("uvicorn.error").error(f"Supabase upload failed: {e}")
+            # Fallback to local if allowed/desired, or raise error
+    
+    # Fallback to local storage (existing logic)
+    if not os.path.exists("static/uploads"):
+        os.makedirs("static/uploads")
+    
+    file_path = f"static/uploads/{filename}"
+    
+    # Reset file pointer if read by Supabase attempt
+    await file.seek(0)
+    
+    with open(file_path, "wb") as buffer:
+        content = await file.read()
+        buffer.write(content)
+        
+    return {"image_url": f"/static/uploads/{filename}"}
 
 @app.put("/api/books/{book_id}", response_model=schemas.BookResponse)
 def update_book(book_id: int, book_update: schemas.BookUpdate, current_user: models.User = Depends(auth.get_current_user), db: Session = Depends(get_db)):

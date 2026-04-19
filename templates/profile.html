@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile - BookMarket</title>
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/skeletons.css">
+    <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');</script>
 </head>
 <body>
     <nav class="navbar">
@@ -17,6 +19,7 @@
                 <a href="/books" class="nav-link">Browse Books</a>
                 <a href="/profile" class="nav-link active">Profile</a>
                 <button class="btn-logout" id="logoutBtn">Logout</button>
+                <button id="themeToggleBtn" class="theme-toggle-btn">🌓</button>
             </div>
         </div>
     </nav>
@@ -29,6 +32,7 @@
                 <div class="user-details">
                     <h2 id="userName">Loading...</h2>
                     <p id="userEmail">Loading...</p>
+                    <button class="btn btn-secondary btn-small" style="margin-top: 1rem;" onclick="logout()">Logout</button>
                 </div>
             </div>
         </div>
@@ -43,7 +47,6 @@
             <!-- User's books will be loaded here -->
         </div>
 
-        <div id="loadingMessage" class="loading-message">Loading your books...</div>
         <div id="noBooksMessage" class="no-books-message" style="display: none;">
             <p>You haven't listed any books yet. <a href="/books">List your first book!</a></p>
         </div>
@@ -89,11 +92,11 @@
         async function loadMyBooks() {
             const token = localStorage.getItem('token');
             const container = document.getElementById('myBooksContainer');
-            const loadingMsg = document.getElementById('loadingMessage');
             const noBooksMsg = document.getElementById('noBooksMessage');
 
-            loadingMsg.style.display = 'block';
-            container.innerHTML = '';
+            // Inject 4 Skeletons instantly
+            container.innerHTML = getSkeletonCardsHTML(4);
+            noBooksMsg.style.display = 'none';
 
             try {
                 const response = await fetch('/api/users/me/books', {
@@ -110,7 +113,8 @@
                         filteredBooks = books.filter(b => b.is_sold);
                     }
 
-                    loadingMsg.style.display = 'none';
+                    // Clear skeletons
+                    container.innerHTML = '';
 
                     if (filteredBooks.length === 0) {
                         noBooksMsg.style.display = 'block';
@@ -121,11 +125,9 @@
                         });
                     }
                 } else {
-                    loadingMsg.style.display = 'none';
                     container.innerHTML = '<p class="error-message">Failed to load books</p>';
                 }
             } catch (error) {
-                loadingMsg.style.display = 'none';
                 container.innerHTML = '<p class="error-message">An error occurred</p>';
             }
         }

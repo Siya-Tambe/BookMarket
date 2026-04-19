@@ -1,3 +1,46 @@
+// Theme toggle system
+function initThemeToggle() {
+    const btn = document.getElementById('themeToggleBtn');
+    if (!btn) return;
+    
+    // Icon states
+    const darkIcon = '☀️';
+    const lightIcon = '🌔';
+    
+    // Set initial icon
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    btn.textContent = currentTheme === 'dark' ? darkIcon : lightIcon;
+
+    btn.addEventListener('click', () => {
+        let theme = document.documentElement.getAttribute('data-theme');
+        let newTheme = theme === 'dark' ? 'light' : 'dark';
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        btn.textContent = newTheme === 'dark' ? darkIcon : lightIcon;
+    });
+}
+document.addEventListener('DOMContentLoaded', initThemeToggle);
+
+function getSkeletonCardsHTML(count) {
+    let html = '';
+    for (let i = 0; i < count; i++) {
+        html += `
+            <div class="book-card skeleton-card">
+                <div class="skeleton-img skeleton"></div>
+                <div class="skeleton-info">
+                    <div class="skeleton-title skeleton"></div>
+                    <div class="skeleton-author skeleton"></div>
+                    <div class="skeleton-text skeleton"></div>
+                    <div class="skeleton-price skeleton"></div>
+                    <div class="skeleton-btn skeleton"></div>
+                </div>
+            </div>
+        `;
+    }
+    return html;
+}
+
 // Authentication helpers
 function isAuthenticated() {
     return localStorage.getItem('token') !== null;
@@ -38,21 +81,19 @@ function checkAuthStatus() {
 // Load books
 async function loadBooks() {
     const container = document.getElementById('booksContainer');
-    const loadingMsg = document.getElementById('loadingMessage');
     const noBooksMsg = document.getElementById('noBooksMessage');
 
     if (!container) return;
-
-    if (loadingMsg) loadingMsg.style.display = 'block';
+    
+    container.innerHTML = getSkeletonCardsHTML(6);
     if (noBooksMsg) noBooksMsg.style.display = 'none';
-    container.innerHTML = '';
 
     try {
         const response = await fetch('/api/books');
         if (response.ok) {
             const books = await response.json();
             
-            if (loadingMsg) loadingMsg.style.display = 'none';
+            container.innerHTML = '';
 
             if (books.length === 0) {
                 if (noBooksMsg) noBooksMsg.style.display = 'block';
@@ -62,12 +103,10 @@ async function loadBooks() {
                 });
             }
         } else {
-            if (loadingMsg) loadingMsg.style.display = 'none';
             container.innerHTML = '<p class="error-message">Failed to load books</p>';
         }
     } catch (error) {
-        if (loadingMsg) loadingMsg.style.display = 'none';
-        container.innerHTML = '<p class="error-message">An error occurred</p>';
+        container.innerHTML = '<p class="error-message">An error occurred while fetching books</p>';
     }
 }
 

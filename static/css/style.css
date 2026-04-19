@@ -589,3 +589,75 @@ body {
         gap: 1rem;
     }
 }
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
+}
+
+.theme-toggle-btn:hover {
+    background: var(--bg-color);
+    transform: scale(1.1) rotate(15deg);
+}
+
+/* Dark Theme Overrides */
+[data-theme="dark"] {
+    --primary-color: #818cf8;
+    --primary-hover: #6366f1;
+    --bg-light: #0f172a;
+    --bg-color: #1e293b;
+    --text-color: #f8fafc;
+    --text-light: #94a3b8;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .navbar {
+    background: rgba(30, 41, 59, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .feature-card,
+[data-theme="dark"] .book-card,
+[data-theme="dark"] .user-info-card,
+[data-theme="dark"] .form-container,
+[data-theme="dark"] .modal-content {
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .tab-btn {
+    color: var(--text-light);
+}
+
+[data-theme="dark"] .tab-btn.active {
+    color: var(--primary-color);
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+    background: #0f172a;
+    color: #f8fafc;
+    border-color: rgba(255,255,255,0.1);
+}
+
+[data-theme="dark"] input:disabled {
+    background: #1e293b;
+}
+
+[data-theme="dark"] .skeleton {
+    background-color: #334155;
+}
